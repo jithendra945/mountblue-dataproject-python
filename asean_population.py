@@ -36,7 +36,8 @@ with open('datasets/population_estimates_csv.csv', 'r') as population_estimate:
     population_estimate.close()
 
 # changing names to shorter one's
-for c_value in enumerate(len(country)):
+COUNTRY_LENGTH = len(country)
+for c_value in range(COUNTRY_LENGTH):
     if country[c_value] == "Brunei Darussalam":
         country[c_value] = "Brunei"
     elif country[c_value] == "Lao People's Democratic Republic":
