@@ -5,52 +5,52 @@ ASEAN countries population for the year 2014
 import csv
 import matplotlib.pyplot as plt
 
-country = []
-population = []
 
-
-def addlabels(x_value, y_value):
+def addlabels(length, population):
     """
-    Adding labels on top of bar plot
+    for Adding labels on top of bar plot
     """
-    for j in range(len(x_value)):
-        plt.text(j, y_value[j], y_value[j], ha="center")
+    for value in range(length):
+        plt.text(value, population[value], population[value], ha="center")
 
 
-with open('datasets/population_estimates_csv.csv', 'r') as population_estimate:
-    population_data = list(csv.reader(population_estimate, delimiter=','))
-    region_index = population_data[0].index('Region')
-    year_index = population_data[0].index('Year')
-    population_index = population_data[0].index('Population')
-    with open('datasets/asean_countries.csv', 'r') as asean_countries:
-        asean_data = list(csv.reader(asean_countries, delimiter='\n'))
-        asean_list = []
-        for i in range(1, len(asean_data)):
-            asean_list.append(asean_data[i][0])
-        for row in population_data:
-            if row[year_index] == "2014":
-                if row[region_index] in asean_list:
-                    country.append(row[region_index])
-                    population.append(int(float(row[population_index])))
-        asean_countries.close()
-    population_estimate.close()
+def asean_population():
+    """
+    Plotting bar for asean countries for the year 2014
+    """
+    with open('datasets/population_estimates_csv.csv', 'r') as file:
+        population_data = list(csv.DictReader(file, delimiter=','))
+        file.close()
 
-# changing names to shorter one's
-COUNTRY_LENGTH = len(country)
-for c_value in range(COUNTRY_LENGTH):
-    if country[c_value] == "Brunei Darussalam":
-        country[c_value] = "Brunei"
-    elif country[c_value] == "Lao People's Democratic Republic":
-        country[c_value] = "Laos"
+    with open('datasets/asean_countries.csv', 'r') as file:
+        asean_list = [row['Asean countries'] for row in csv.DictReader(file)]
+        file.close()
 
-# Passing the parameters to the bar function,
-# this is the main function which creates the bar plot
-plt.bar(country, population)
-addlabels(country, population)
-plt.title('ASEAN countries population for the year 2014')
-plt.xlabel('Countries')
-plt.ylabel('Population')
-plt.xticks(rotation=25)
+    population = []
+    for row in population_data:
+        if row['Year'] == "2014" and row['Region'] in asean_list:
+            population.append(int(float(row['Population'])))
 
-# Displaying the bar plot
-plt.show()
+    # changing names to shorter one's
+    # countries_length = len(asean_list)
+    for key, value in enumerate(asean_list):
+        if value == "Brunei Darussalam":
+            asean_list[key] = "Brunei"
+        elif value == "Lao People's Democratic Republic":
+            asean_list[key] = "Laos"
+
+    # Passing the parameters to the bar function,
+    # this is the main function which creates the bar plot
+    plt.bar(asean_list, population)
+    addlabels(len(asean_list), population)
+    plt.title('ASEAN countries population for the year 2014')
+    plt.xlabel('Countries')
+    plt.ylabel('Population')
+    plt.xticks(rotation=25)
+
+    # Displaying the bar plot
+    plt.show()
+
+
+if __name__ == '__main__':
+    asean_population()
