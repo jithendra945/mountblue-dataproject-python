@@ -16,7 +16,7 @@ def addlabels(length, population):
 
 def asean_population():
     """
-    Plotting bar for asean countries for the year 2014
+    Bar plot of population of ASEAN countries for the year 2014
     """
     with open('datasets/population_estimates_csv.csv', 'r') as file:
         population_data = list(csv.DictReader(file, delimiter=','))

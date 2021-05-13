@@ -3,40 +3,47 @@ Indian population over years
 """
 # importing the required libraries
 import csv
+from collections import defaultdict
 import matplotlib.pyplot as plt
 
-year = []
-population = []
 
-
-def addlabels(x_value, y_value):
+def addlabels(length, population):
     """
-    Adding labels on top of bar plot
+    for Adding labels on top of bar plot
     """
-    for j in range(len(x_value)):
-        plt.text(j, y_value[j], y_value[j], ha="center")
+    for value in range(length):
+        plt.text(value, population[value], population[value], ha="center")
 
 
-with open('datasets/population_estimates_csv.csv', 'r') as file:
-    my_list = list(csv.reader(file, delimiter=','))
-    region_index = my_list[0].index('Region')
-    year_index = my_list[0].index('Year')
-    population_index = my_list[0].index('Population')
-    for row in my_list:
-        if row[region_index] == "India":
-            year.append(row[year_index])
-            population.append(int(float(row[population_index])))
-    file.close()
+def indian_population():
+    """
+    Bar Plot of 'population of India' vs. years.
+    """
+    with open('datasets/population_estimates_csv.csv', 'r') as file:
+        csv_list = list(csv.DictReader(file, delimiter=','))
+        file.close()
 
-# Passing the parameters to the bar function,
-# this is the main function which creates the bar plot
-# taking the last 10 years of data
-plt.bar(year[-10:], population[-10:])
-addlabels(year[-10:], population[-10:])
-plt.title('Indian population over years')
-plt.xlabel('Years')
-plt.ylabel('Population')
-plt.xticks(rotation=25)
+    india = defaultdict(int)
 
-# Displaying the bar plot
-plt.show()
+    for row in csv_list:
+        if row['Region'] == "India":
+            india[row['Year']] = int(float(row['Population']))
+
+    # taking the recent 10 years of data
+    years = 10
+
+    # passing the parameters to the bar function,
+    # this is the main function which creates the bar plot
+    plt.bar(list(india.keys())[-years:], list(india.values())[-years:])
+    addlabels(years, list(india.values())[-years:])
+    plt.title('Indian population over years')
+    plt.xlabel('Years')
+    plt.ylabel('Population')
+    plt.xticks(rotation=25)
+
+    # Displaying the bar plot
+    plt.show()
+
+
+if __name__ == '__main__':
+    indian_population()
